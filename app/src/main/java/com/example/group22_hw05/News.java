@@ -6,6 +6,12 @@ public class News {
     public News() {
     }
 
+    public News(String author, String title, String publishedAt) {
+        this.author = author;
+        this.title = title;
+        this.publishedAt = publishedAt;
+    }
+
     @Override
     public String toString() {
         return "News{" +
