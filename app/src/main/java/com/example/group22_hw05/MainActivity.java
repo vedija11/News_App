@@ -47,17 +47,7 @@ public class MainActivity extends AppCompatActivity {
         if (isConnected()) {
             new GetNewsAsync().execute("https://newsapi.org/v2/sources?apiKey=a8e636e2de8a49889813d4d67900394d");
 
-            ArrayAdapter<Source> adapter = new ArrayAdapter<Source>(this, android.R.layout.simple_list_item_1, android.R.id.text1, result);
-            listViewMain.setAdapter(adapter);
-            listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Log.d("Demo", "Clicked item " + (position+1) + ", news "+ result.toArray()[position]);
-                    Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
-                    //newsIntent.putExtra("Source", result);
-                    startActivity(newsIntent);
-                }
-            });
+
 
         } else
             Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -119,11 +109,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         @Override
-        protected void onPostExecute(ArrayList<Source> result) {
+        protected void onPostExecute(final ArrayList<Source> result) {
             if (result != null) {
                 //showProgressDialog("Loading Sources...");
                 Log.d("result", String.valueOf(result));
-
+                ArrayAdapter<Source> adapter = new ArrayAdapter<Source>(MainActivity.this, android.R.layout.simple_list_item_1, result);
+                listViewMain.setAdapter(adapter);
+                listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        Log.d("Demo", "Clicked item " + (position+1) + ", news "+ result.toArray()[position]);
+                        Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
+                        //newsIntent.putExtra("Source", result);
+                        startActivity(newsIntent);
+                    }
+                });
             } else {
                 Log.d("demo", "null result");
             }
