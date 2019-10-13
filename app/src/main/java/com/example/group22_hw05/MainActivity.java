@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewMain;
     ProgressDialog progressDialog;
     ArrayList<Source> result = new ArrayList<>();
-    ArrayList<News> newsList = new ArrayList<>();
+    ArrayList<String> sourceName = new ArrayList<>();
+    ArrayList<String> sourceID = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,8 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         if (isConnected()) {
+
             new GetNewsAsync().execute("https://newsapi.org/v2/sources?apiKey=a8e636e2de8a49889813d4d67900394d");
-
-
 
         } else
             Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                         source.name = sourcesJSONObject.getString("name");
 
                         result.add(source);
+                        sourceName.add(source.name);
+                        sourceID.add(source.id);
                     }
                 }
             } catch (MalformedURLException e) {
@@ -113,14 +115,18 @@ public class MainActivity extends AppCompatActivity {
             if (result != null) {
                 //showProgressDialog("Loading Sources...");
                 Log.d("result", String.valueOf(result));
-                ArrayAdapter<Source> adapter = new ArrayAdapter<Source>(MainActivity.this, android.R.layout.simple_list_item_1, result);
+                Log.d("sourceName", String.valueOf(sourceName));
+                Log.d("sourceID", String.valueOf(sourceID));
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, sourceName);
                 listViewMain.setAdapter(adapter);
                 listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        Log.d("Demo", "Clicked item " + (position+1) + ", news "+ result.toArray()[position]);
+                        Log.d("Demo", "Clicked item " + (position+1) + ", news "+ sourceName.toArray()[position]);
                         Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
-                        //newsIntent.putExtra("Source", result);
+                        newsIntent.putExtra("SourceName", (String) sourceName.toArray()[position]);
+                        newsIntent.putExtra("SourceID", (String) sourceID.toArray()[position]);
                         startActivity(newsIntent);
                     }
                 });

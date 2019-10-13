@@ -3,6 +3,8 @@ package com.example.group22_hw05;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,18 +36,16 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
 
         listView2 = findViewById(R.id.listView2);
-        //newsData.add(new News("dad2","hiiiii3", "22/21/2012"));
-        //newsData.add(new News("dad3","hiiiii4", "23/21/2012"));
-        //newsData.add(new News("dad4","hiiiii5", "24/21/2012"));
-        //newsData.add(new News("dad5","hiiiii6", "25/21/2012"));
-        //newsData.add(new News("dad6","hiiiii7", "26/21/2012"));
 
         Intent displayNewsIntent = getIntent();
-        //final ArrayList<Source> newsList = (ArrayList<Source>) displayNewsIntent.getSerializableExtra("Source");
-        //Log.d("NewsActivity", newsList.toString());
-        //String news = newsList.toString();
+        String newsHeading = displayNewsIntent.getStringExtra("SourceName");
+        setTitle(newsHeading);
+        Log.d("newsHeading......", newsHeading);
+        String newsID = displayNewsIntent.getStringExtra("SourceID");
+        Log.d("newsID......", newsID);
 
-        new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?sources=abc-news&apiKey=a8e636e2de8a49889813d4d67900394d");
+        new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
+        Log.d("url", "https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
         NewsAdapter adapter = new NewsAdapter(this, R.layout.news_item, newsData);
         listView2.setAdapter(adapter);
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,17 +96,65 @@ public class NewsActivity extends AppCompatActivity {
             return newsData;
         }
 
-
         @Override
         protected void onPostExecute(ArrayList<News> newsData) {
             if (newsData != null) {
                 Log.d("newsData", String.valueOf(newsData));
+                //String ImageUrl = newsData.get(0).urlToImage;
+                //new GetImageAsync().execute(ImageUrl);
 
             } else {
                 Log.d("demo", "null newsData");
             }
         }
-
     }
+
+/*
+    private class GetImageAsync extends AsyncTask<String, Void, Void> {
+        Bitmap bitmap = null;
+
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setProgress(0);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            bitmap = null;
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    bitmap = BitmapFactory.decodeStream(connection.getInputStream());
+                }
+            } catch (Exception e) {
+                Log.d("ImageAsync", "doInBackground: " + e);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            //progressBar.setProgress(40);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressBar.setVisibility(View.INVISIBLE);
+            if (bitmap != null && imageView != null) {
+                imageView.setImageBitmap(bitmap);
+            }
+            else
+                imageView.setImageBitmap(null);
+        }
+    }*/
 
 }

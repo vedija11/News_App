@@ -8,6 +8,10 @@ public class Source {
 
     @Override
     public String toString() {
-        return name;
+        return "Source{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
+
 }

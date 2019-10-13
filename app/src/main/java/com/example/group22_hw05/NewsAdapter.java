@@ -31,7 +31,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
             viewHolder.tv_title = convertView.findViewById(R.id.tv_title);
             viewHolder.tv_author = convertView.findViewById(R.id.tv_author);
             viewHolder.tv_publishDate = convertView.findViewById(R.id.tv_publishDate);
-            //viewHolder.imageView = convertView.findViewById(R.id.imageView);
+            viewHolder.imageView = convertView.findViewById(R.id.imageView);
 
             convertView.setTag(viewHolder);
         } else {
