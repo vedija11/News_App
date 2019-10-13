@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final ArrayList<Source> result) {
             if (result != null) {
-                //showProgressDialog("Loading Sources...");
+
                 Log.d("result", String.valueOf(result));
                 Log.d("sourceName", String.valueOf(sourceName));
                 Log.d("sourceID", String.valueOf(sourceID));
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         Log.d("Demo", "Clicked item " + (position+1) + ", news "+ sourceName.toArray()[position]);
+                        //showProgressDialog("Loading Stories...");
                         Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
                         newsIntent.putExtra("SourceName", (String) sourceName.toArray()[position]);
                         newsIntent.putExtra("SourceID", (String) sourceID.toArray()[position]);
@@ -137,13 +138,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void showProgressDialog(String message) {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(message);
         progressDialog.show();
     }
+
     private void hideProgressDialog() {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.dismiss();

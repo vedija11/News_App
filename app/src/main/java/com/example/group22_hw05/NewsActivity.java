@@ -46,15 +46,7 @@ public class NewsActivity extends AppCompatActivity {
 
         new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
         Log.d("url", "https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
-        NewsAdapter adapter = new NewsAdapter(this, R.layout.news_item, newsData);
-        listView2.setAdapter(adapter);
-        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d("news activity", "Clicked " + (position + 1));
 
-            }
-        });
 
     }
 
@@ -78,7 +70,7 @@ public class NewsActivity extends AppCompatActivity {
                         news.title = articlesJSONObject.getString("title");
                         news.urlToImage = articlesJSONObject.getString("urlToImage");
                         news.publishedAt = articlesJSONObject.getString("publishedAt");
-
+                        news.url = articlesJSONObject.getString("url");
                         newsData.add(news);
                     }
                 }
@@ -97,64 +89,24 @@ public class NewsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<News> newsData) {
-            if (newsData != null) {
+        protected void onPostExecute(final ArrayList<News> newsData) {
+            if (newsData != null || newsData.toString() != "[]") {
                 Log.d("newsData", String.valueOf(newsData));
-                //String ImageUrl = newsData.get(0).urlToImage;
-                //new GetImageAsync().execute(ImageUrl);
-
+                NewsAdapter adapter = new NewsAdapter(NewsActivity.this, R.layout.news_item, newsData);
+                listView2.setAdapter(adapter);
+                listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        Log.d("news activity", "Clicked " + (position + 1));
+                        Intent webIntent = new Intent(NewsActivity.this, WebViewActivity.class);
+                        webIntent.putStringArrayListExtra("webData", (ArrayList<String>) newsData.toArray()[position]);
+                        startActivity(webIntent);
+                    }
+                });
             } else {
                 Log.d("demo", "null newsData");
             }
         }
     }
-
-/*
-    private class GetImageAsync extends AsyncTask<String, Void, Void> {
-        Bitmap bitmap = null;
-
-        @Override
-        protected void onPreExecute() {
-            //progressBar.setVisibility(View.VISIBLE);
-            //progressBar.setProgress(0);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            bitmap = null;
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    bitmap = BitmapFactory.decodeStream(connection.getInputStream());
-                }
-            } catch (Exception e) {
-                Log.d("ImageAsync", "doInBackground: " + e);
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            //progressBar.setProgress(40);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            progressBar.setVisibility(View.INVISIBLE);
-            if (bitmap != null && imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-            else
-                imageView.setImageBitmap(null);
-        }
-    }*/
 
 }
