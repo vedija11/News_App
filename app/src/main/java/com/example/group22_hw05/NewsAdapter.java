@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<News> {
@@ -42,7 +44,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
         viewHolder.tv_title.setText(news.title);
         viewHolder.tv_author.setText(news.author);
         viewHolder.tv_publishDate.setText(news.publishedAt);
-        //viewHolder.imageView.setImageBitmap(news.urlToImage);
+        Picasso.get().load(news.urlToImage).resize(200,200).centerCrop().into(viewHolder.imageView);
 
         return convertView;
     }
