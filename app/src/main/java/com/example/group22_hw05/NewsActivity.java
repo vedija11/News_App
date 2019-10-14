@@ -9,9 +9,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
@@ -44,8 +48,8 @@ public class NewsActivity extends AppCompatActivity {
         String newsID = displayNewsIntent.getStringExtra("SourceID");
         Log.d("newsID......", newsID);
 
-        new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
-        Log.d("url", "https://newsapi.org/v2/top-headlines?sources="+newsID+"&apiKey=a8e636e2de8a49889813d4d67900394d");
+        new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?sources=" + newsID + "&apiKey=a8e636e2de8a49889813d4d67900394d");
+        Log.d("url", "https://newsapi.org/v2/top-headlines?sources=" + newsID + "&apiKey=a8e636e2de8a49889813d4d67900394d");
 
 
     }
@@ -97,9 +101,15 @@ public class NewsActivity extends AppCompatActivity {
                 listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        Log.d("news activity", "Clicked " + (position + 1));
+
+                        Log.d("news activity", "Clicked " + newsData.get(position).url);
+                   /*     WebView webView = new WebView(NewsActivity.this);
+                        webView.getSettings().setMixedContentMode( WebSettings.MIXED_CONTENT_ALWAYS_ALLOW );
+                        webView.setWebViewClient(new WebViewClient());
+                        webView.loadUrl("newsData.get(position).url");*/
+                        //NewsActivity.this.
                         Intent webIntent = new Intent(NewsActivity.this, WebViewActivity.class);
-                        webIntent.putStringArrayListExtra("webData", (ArrayList<String>) newsData.toArray()[position]);
+                        webIntent.putExtra("webData", newsData.get(position).url);
                         startActivity(webIntent);
                     }
                 });
