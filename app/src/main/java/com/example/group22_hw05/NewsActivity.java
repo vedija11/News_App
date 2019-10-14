@@ -2,6 +2,7 @@ package com.example.group22_hw05;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 public class NewsActivity extends AppCompatActivity {
 
     ListView listView2;
+    ProgressDialog progressDialog;
     ArrayList<News> newsData = new ArrayList<>();
 
     @Override
@@ -40,6 +42,7 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
 
         listView2 = findViewById(R.id.listView2);
+        progressDialog = new ProgressDialog(this);
 
         Intent displayNewsIntent = getIntent();
         String newsHeading = displayNewsIntent.getStringExtra("SourceName");
@@ -94,6 +97,7 @@ public class NewsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final ArrayList<News> newsData) {
+            hideProgressDialog();
             if (newsData != null || newsData.toString() != "[]") {
                 Log.d("newsData", String.valueOf(newsData));
                 NewsAdapter adapter = new NewsAdapter(NewsActivity.this, R.layout.news_item, newsData);
@@ -101,13 +105,6 @@ public class NewsActivity extends AppCompatActivity {
                 listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                        Log.d("news activity", "Clicked " + newsData.get(position).url);
-                   /*     WebView webView = new WebView(NewsActivity.this);
-                        webView.getSettings().setMixedContentMode( WebSettings.MIXED_CONTENT_ALWAYS_ALLOW );
-                        webView.setWebViewClient(new WebViewClient());
-                        webView.loadUrl("newsData.get(position).url");*/
-                        //NewsActivity.this.
                         Intent webIntent = new Intent(NewsActivity.this, WebViewActivity.class);
                         webIntent.putExtra("webData", newsData.get(position).url);
                         startActivity(webIntent);
@@ -117,6 +114,22 @@ public class NewsActivity extends AppCompatActivity {
                 Log.d("demo", "null newsData");
             }
         }
+
+        @Override
+        protected void onPreExecute() {
+            showProgressDialog("Loading Stories...");
+        }
+    }
+    private void showProgressDialog(String message) {
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.dismiss();
     }
 
 }

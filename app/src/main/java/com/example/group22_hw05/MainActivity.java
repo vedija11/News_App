@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Source> doInBackground(String... params) {
-            hideProgressDialog();
             HttpURLConnection connection = null;
 
             try {
@@ -112,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final ArrayList<Source> result) {
+            hideProgressDialog();
             if (result != null) {
 
                 Log.d("result", String.valueOf(result));
